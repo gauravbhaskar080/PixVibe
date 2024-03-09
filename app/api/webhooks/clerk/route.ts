@@ -41,11 +41,13 @@ export async function POST(req: Request) {
 
   // Verify the payload with the headers
   try {
+    console.log("Before connecting to the database");
     evt = wh.verify(body, {
       "svix-id": svix_id,
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     }) as WebhookEvent;
+    console.log("After connecting to the database");
   } catch (err) {
     console.error("Error verifying webhook:", err);
     return new Response("Error occured", {

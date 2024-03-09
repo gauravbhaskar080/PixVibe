@@ -1,4 +1,4 @@
-"use server";
+"use server"
 
 import { revalidatePath } from "next/cache";
 
@@ -6,16 +6,23 @@ import User from "../database/models/user.model";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
 
+
+// user.actions.ts
+
+// ...
+
 // CREATE
 export async function createUser(user: CreateUserParams) {
   try {
     await connectToDatabase();
-console.log("Connected");
+    console.log("DB connected");
+
     const newUser = await User.create(user);
-    console.log(newUser);
+
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     handleError(error);
+    console.error("User action error:", error);
   }
 }
 
@@ -31,6 +38,7 @@ export async function getUserById(userId: string) {
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
     handleError(error);
+    console.error("User action error:", error);
   }
 }
 
@@ -48,6 +56,7 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
     return JSON.parse(JSON.stringify(updatedUser));
   } catch (error) {
     handleError(error);
+    console.error("User action error:", error);
   }
 }
 
@@ -70,6 +79,7 @@ export async function deleteUser(clerkId: string) {
     return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
   } catch (error) {
     handleError(error);
+    console.error("User action error:", error);
   }
 }
 
@@ -80,14 +90,15 @@ export async function updateCredits(userId: string, creditFee: number) {
 
     const updatedUserCredits = await User.findOneAndUpdate(
       { _id: userId },
-      { $inc: { creditBalance: creditFee } },
+      { $inc: { creditBalance: creditFee }},
       { new: true }
     );
 
-    if (!updatedUserCredits) throw new Error("User credits update failed");
+    if(!updatedUserCredits) throw new Error("User credits update failed");
 
     return JSON.parse(JSON.stringify(updatedUserCredits));
   } catch (error) {
     handleError(error);
+    console.error("User action error:", error);
   }
 }
